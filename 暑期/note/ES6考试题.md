@@ -1,6 +1,18 @@
 ## **1、es5和es6的区别，说一下你所知道的es6**
 
-就是答es6新增的地方 ...数组对象、函数（默认值、rest、严格模式、箭头函数） 和下面所有的内容
+就是答es6新增的地方，拓展了很多东西 ：...		
+
+数组		新加些构造函数方法Array.from()【这样真正的能加迭代器，用[]框起来只是加了length属性吧】，of()：将值变成数组Array.of(3, 11, 8) // [3,11,8]
+
+实例方法：find()，entries()，keys()，values()，includes()【判断数组是否包含给定的值（即给的第一个参数，第二个参数是搜索初始位置，负数为倒数）】	flat(层数)，flatMap()  （还有其他的fill、copyWithin）
+
+flatMap()相当于先执行了次map，在把执行后的数组falt了
+
+对象：对象属性、方法的简写，扩展运算符在对象中的使用，因为Object.entries()返回的是数组，所以可以无脑使用for...of了
+
+函数（默认值、rest、严格模式、箭头函数） 
+
+和下面所有的内容
 
 [es5和es6的区别，说一下你所知道的es6_es6比es5多的新特性_休庸的博客-CSDN博客](https://blog.csdn.net/weixin_57913339/article/details/130150750#:~:text=ECMAScript5，即ES5，是ECMAScript的第五次修订，于2009年完成标准化,ECMAScript6，即ES6，是ECMAScript的第六次修订，于2015年完成，也称ES2015 ES6是继ES5之后的一次改进，相对于ES5更加简洁，提高了开发效率)
 
@@ -73,7 +85,17 @@ setTimeout属性宏任务，Promise里面的then方法属于微任务，Async/Aw
 
 ## **9、promise有几种状态，什么时候会进入catch？**
 
+reject时
 
+catch其实就是then方法执行第二个参数reject的方法的别名，但两者还是有区别的
+
+[【经典面试题】Promise 中reject 和 catch 处理上有什么区别？_不进入reject进入catch_燕穗子博客的博客-CSDN博客](https://blog.csdn.net/m0_64346035/article/details/124824116)
+
+如果 `Promise` 状态已经变成`resolved`，再抛出错误是无效的
+
+*//会被忽略，不会被捕获，等于没有抛出*
+
+[关于Promise.catch()错误捕获机制的理解_Rrivers_111的博客-CSDN博客](https://blog.csdn.net/weixin_44776206/article/details/109402410)
 
 ## **10、下面的输出结果是多少**
 
@@ -117,7 +139,7 @@ set本质是比较内存地址，这里是数组为引用变量，
 
 ## **14、Promise 中reject 和 catch 处理上有什么区别**
 
-
+[【经典面试题】Promise 中reject 和 catch 处理上有什么区别？_不进入reject进入catch_燕穗子博客的博客-CSDN博客](https://blog.csdn.net/m0_64346035/article/details/124824116)
 
 ## **15、使用class 手写一个promise**
 
