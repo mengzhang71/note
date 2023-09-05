@@ -17,7 +17,7 @@ let sym: symbol = Symbol("me");
 ### 4、interface可以用来干什么？
 定义对象规则，TypeScript 中的接口是一个非常灵活的概念，除了可用于[对类的一部分行为进行抽象]以外，也常用于对「对象的形状（Shape）」进行描述。
 ### 5、interface和type的相同点和不同点
-相同点：1.可以描述对象或者函数
+相同点：1.可以描述对象或者函数（都可以给类型命名并通过该名字来引用表示的类型）
         2.二者可以继承并且可以相互继承，只是语法上有区别，type是采用&符号继承，interface采用的是extends
 不同点: 1.type可以声明类型别名，等号右边为设置为数据类型，interface不可以使用此用法
 //type可以创建 类型别名 interface不行
@@ -56,6 +56,14 @@ const user6: User6 = {
   age: 18,
 };
 优先选择interface，当interface满足不了条件时，才使用type类型别名
+
+[TS篇—type 和 interface 的区别_ts中type和interface的区别_小和尚同志的博客-CSDN博客](https://blog.csdn.net/qq_42345237/article/details/124895617#:~:text=type 在声明类型别名之后 实际上是一个赋值操作，它需要将别名与类型关联起来 。 也就是说类型别名不会创建出一种新的类型，它只是给已有类型命名并直接进行引用。 interface 是 定义了一个接口类型。,则 只能表示对象类型 。 interface 可以 继承其他的接口、类等对象类型， type 不支持继承。)
+
+- type 能够**表示非对象类型，** 而 `interface` 则**只能表示对象类型**。
+- `interface`可以**继承其他的接口、类等对象类型，** type 不支持继承。
+
+对于 `type`来说，更多的是对类型的一种复用，比如在项目中需要用到一些比较复杂的或者书写起来很长的类型。我们可以使用 `type`来直接引用该类型：
+
 ### 6、enum枚举类型有什么用?举例说明
 enum PostStatus {
   Draft = 0,
