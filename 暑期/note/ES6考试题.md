@@ -139,6 +139,13 @@ set本质是比较内存地址，这里是数组为引用变量，
 
 ## **14、Promise 中reject 和 catch 处理上有什么区别**
 
+reject 是 Promise 的方法，而 catch 是 Promise 实例的方法
+
+reject 是用来抛出异常，catch 是用来处理异常
+reject后的东西，一定会进入then中的第二个回调，如果then中没有写第二个回调，则进入catch
+网络异常（比如断网），会直接进入catch而不会进入then的第二个回调
+
+
 [【经典面试题】Promise 中reject 和 catch 处理上有什么区别？_不进入reject进入catch_燕穗子博客的博客-CSDN博客](https://blog.csdn.net/m0_64346035/article/details/124824116)
 
 ## **15、使用class 手写一个promise**
@@ -163,5 +170,5 @@ set本质是比较内存地址，这里是数组为引用变量，
 
 ## **20、es6的导入导出模块**
 
-
+讲下import ，export，default默认导出，{}，as
 
