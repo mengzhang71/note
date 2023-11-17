@@ -85,6 +85,10 @@ setTimeout属性宏任务，Promise里面的then方法属于微任务，Async/Aw
 
 ## **9、promise有几种状态，什么时候会进入catch？**
 
+没有定义promise第二个回调时，网络异常时
+
+
+
 reject时
 
 catch其实就是then方法执行第二个参数reject的方法的别名，但两者还是有区别的
@@ -154,7 +158,7 @@ reject后的东西，一定会进入then中的第二个回调，如果then中没
 
 ## **16、如何使用Set去重**
 
-
+const uniqueArray = [...new Set(array)];
 
 ## **17、Proxy是什么**
 

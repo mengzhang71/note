@@ -1,0 +1,177 @@
+<template>
+  <div class="chart-canvas-pie mini" ref="LineChartZRef"></div>
+</template>
+
+<script lang="ts">
+import { Component, Vue, Ref, Prop, Watch } from 'vue-property-decorator'
+import echarts from 'echarts'
+@Component
+export default class DoubleBarChart extends Vue {
+  @Ref() LineChartZRef!: any
+  @Prop({ default: '未知' }) units?: any
+  @Prop({ default: '32' }) barWidth?: any
+  @Prop() xData?: any
+  @Prop() seriesData1?: any
+  @Prop() seriesData2?: any
+  @Prop() legendData?: any
+  @Prop({ default: '20%' }) barCategoryGap?: any
+  @Prop({ default: true }) isZoom?: any
+
+  // series外框数据
+  private chart: any = {}
+  private dataLoaded = false
+  private vueMounted = false
+  @Watch('seriesData1', { immediate: true, deep: true }) dataChange (seriesData: any) {
+    if (seriesData?.length) {
+      this.dataLoaded = true
+      this.initChart()
+    }
+  }
+  mounted () {
+    this.$nextTick(() => {
+      this.vueMounted = true
+      this.initChart()
+    })
+  }
+  updateData () {
+    const option = {
+      title: [
+        {
+          text: '单位:',
+          right: '46px',
+          top: '0',
+          textStyle: {
+            color: '#86909C',
+            fontSize: '12px'
+          }
+        },
+        {
+          text: this.units,
+          right: '16px',
+          top: '0',
+          textStyle: {
+            color: '#4E5969',
+            fontSize: '12px'
+          }
+        }
+      ],
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'none'
+        }
+      },
+      legend: {
+        data: this.legendData,
+        textStyle: {
+          color: '#86909C'
+        },
+        left: '16px',
+        top: '0'
+      },
+      grid: [
+        {
+          left: '16px',
+          top: '32px',
+          right: this.isZoom ? '40px' : '6px',
+          bottom: '0'
+        }
+      ],
+      xAxis: [
+        {
+          //左侧柱状图的X轴
+          gridIndex: 0, //x 轴所在的 grid 的索引
+          show: false
+        }
+      ],
+      yAxis: [
+        {
+          //左侧柱状图的Y轴
+          gridIndex: 0, //y轴所在的 grid 的索引
+          splitLine: 'none',
+          axisTick: 'none',
+          axisLine: 'none',
+
+          axisLabel: {
+            align: 'left',
+            padding: [-50, 0, 0, 8],
+            // verticalAlign: 'top',
+            textStyle: {
+              color: '#4E5969',
+              fontSize: '12'
+            }
+          },
+          // data: this.xData,
+          data: ['设施类', '规模类', '品牌奖励类'],
+          inverse: true
+        }
+      ],
+      series: [
+        {
+          name: this.legendData[0],
+          type: 'bar',
+          xAxisIndex: 0, //使用的 x 轴的 index，在单个图表实例中存在多个 x 轴的时候有用。
+          yAxisIndex: 0, //使用的 y 轴的 index，在单个图表实例中存在多个 y轴的时候有用。
+          data: this.seriesData1,
+          barWidth: this.barWidth,
+          barCategoryGap: '10%',
+          itemStyle: {
+            normal: {
+              color: '#00C361',
+              barBorderRadius: [0, 4, 4, 0]
+            }
+          },
+          z: 2
+        },
+        {
+          name: this.legendData[1],
+          type: 'bar',
+          xAxisIndex: 0, //使用的 x 轴的 index，在单个图表实例中存在多个 x 轴的时候有用。
+          yAxisIndex: 0, //使用的 y 轴的 index，在单个图表实例中存在多个 y轴的时候有用。
+          // data: [6000, 50000, 75000, 45000, 60000, 35000, 45000, 20000, 32000],
+          data: this.seriesData2,
+          barWidth: this.barWidth,
+          barCategoryGap: '10%',
+          itemStyle: {
+            normal: {
+              color: '#F74767',
+              barBorderRadius: [0, 4, 4, 0]
+            }
+          },
+          z: 2
+        }
+      ]
+    }
+    return option
+  }
+  initChart () {
+    if (!this.dataLoaded || !this.vueMounted) return
+    this.chart = echarts.init(this.LineChartZRef)
+    const option = this.updateData()
+    this.chart.setOption(option)
+    console.log('项目公开++++++++', option)
+    window.addEventListener('resize', () => {
+      this.chart.resize()
+    })
+  }
+  resetChart () {
+    const option = this.updateData()
+    this.chart.setOption(option)
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.chart-canvas-pie {
+  // width: 428px;
+  // height: 200px;
+  width: 100%;
+  height: 100%;
+  &.mini {
+    height: 320px;
+  }
+  &.big {
+    height: 640px;
+  }
+}
+</style>
