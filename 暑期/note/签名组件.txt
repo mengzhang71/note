@@ -1,0 +1,197 @@
+<template>
+  <div class="register-container ht100">
+    <Head :deepColor="false" title="签名" @back.native="back"> </Head>
+    <div class="main-wrapper">
+      <div class="sign-body">
+        <canvas class="self-canvas"  v-if="showCanvas" :width="canvasWidth" :height="canvasHeight" ref="refSign"></canvas>
+      </div>
+      <div class="bottom-wrap">
+        <div class="self-button" @click="refresh()">重 签</div>
+        <div class="self-button self-button-primary" @click="handleClickSubmit()">提 交</div>
+      </div>
+    </div>
+  </div>
+</template>
+<script lang="ts">
+import { Component, Ref, Vue } from 'vue-property-decorator'
+import { DeclareModule } from '@/store/modules/declare'
+
+import Head from '@/components/Head/Head.vue'
+import SignaturePad from 'signature_pad'
+import { cloneDeep } from 'lodash'
+@Component({
+  name: 'Sign',
+  components: { Head },
+})
+export default class Sign extends Vue {
+  @Ref() refSign!: any
+  get imgIndex() {
+    return this.$route.query.imgIndex || -1
+  }
+  showCanvas = false
+  canvasWidth = 0
+  canvasHeight = 0
+  signaturePad: any
+  initCanvas() {
+    this.canvasHeight = document.getElementsByClassName('sign-body')[0].clientHeight
+    this.canvasWidth = document.getElementsByClassName('sign-body')[0].clientWidth
+    this.showCanvas = true
+    this.$nextTick(() => {
+      const canvas: any = document.querySelector('canvas')
+      this.signaturePad = new SignaturePad(canvas, {
+        minWidth: 5,
+        maxWidth: 10,
+        // penColor: '#08BCB0',
+        penColor: '#333',
+        backgroundColor:'#ecfafa'
+      })
+      let type: any = this.$route.query.type
+      if (this.formData[type]) {
+        // 将数据加载到画布上.参数为数据本身, 无返回值
+        // setTimeout(()=>{
+          if(+this.imgIndex > 0) {
+            this.signaturePad.fromDataURL(this.formData[type][+this.imgIndex])
+          }
+        // },2000)
+      }
+    })
+
+    // // 返回签名图像作为数据URL（ 有关可能的参数列表，请参见  https://mdn.io/todataurl）
+    // this.signaturePad.toDataURL() //将图片另存为PNG
+    // this.signaturePad.toDataURL('image/jpeg') //将图片另存为JPEG
+    // this.signaturePad.toDataURL('image/svg+xml') //将图片另存为 SVG
+
+    // // 将数据加载到画布上.参数为数据本身, 无返回值
+    // this.signaturePad.fromDataURL('data:image/png;base64,iVBORw0K...')
+
+    // // 判断画布是否为空，空返回 true 否则 false
+    // this.signaturePad.isEmpty()
+
+    // //  取消绑定所有事件处理程序
+    // this.signaturePad.off()
+
+    // //  重新绑定所有事件处理程序
+    // this.signaturePad.on()
+  }
+  back() {
+    // let result: any = this.$route.query.type
+    // this.formData[result] = this.refSign.toDataURL()
+    // DeclareModule.SET_FORM_DATA(this.formData)
+  }
+  refresh() {
+    // 清除画布
+    this.signaturePad.clear()
+  }
+  handleClickSubmit() {
+    if (this.signaturePad.isEmpty()) {
+      this.$toast('请签字')
+      return
+    }
+    let result: any = this.$route.query.type
+    if(!Array.isArray(this.formData[result])) {
+      this.formData[result] = this.formData[result] ? [this.formData[result]] :[]
+    }
+    this.formData[result].push(this.refSign.toDataURL())
+    DeclareModule.SET_FORM_DATA(this.formData)
+    this.$router.back()
+  }
+  formData: any = {}
+  created() {
+    this.formData = cloneDeep(DeclareModule.formData)
+  }
+  mounted() {
+    this.initCanvas()
+  }
+}
+</script>
+<style lang="scss" scoped>
+@import '@/styles/list.scss';
+.normal-icon {
+  width: 2rem;
+  height: 2rem;
+}
+.flex-center {
+  display: flex;
+  align-items: center;
+}
+.font-weight {
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+.register-container {
+  .sub-title {
+    padding: 0.4rem;
+    text-align: center;
+    background: white;
+    ::v-deep .top-search {
+      width: 100%;
+      padding: 0 20px 20px 20px;
+      .van-search {
+        background: #f6f6f6 !important;
+        color: #000819;
+        .van-field__control {
+          color: #000819;
+          &::placeholder {
+            color: #000819 !important;
+          }
+        }
+      }
+    }
+  }
+  .main-wrapper {
+    overflow: auto;
+    height: 100%;
+    padding: 1rem 0 0 0;
+    .sign-body {
+      background: white;
+      height: calc(100% - 9rem);
+      .self-canvas{
+        // background: #08bcb0;
+        // transform: rotate(90deg);
+      }
+    }
+    .normal-icon {
+      margin-right: 1rem;
+    }
+    .self-height {
+      overflow: auto;
+      height: calc(100% - 8rem);
+    }
+    .bottom-wrap {
+      text-align: right;
+      // padding: 0.4rem;
+      background: white;
+      border: 1px solid #f0f0f0;
+      .self-button {
+        width: 50%;
+        height: 3rem;
+        display: inline-flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        background: white;
+      }
+      .self-button-primary {
+        background: #08bcb0;
+        color: white;
+      }
+    }
+  }
+}
+::v-deep .require-field {
+  .van-cell__title {
+    position: relative;
+    &::before {
+      content: '*';
+      position: absolute;
+      top: 8px;
+      left: -20px;
+      color: red;
+    }
+  }
+}
+::v-deep .collapse-title {
+  color: #202124;
+  font-weight: bolder;
+}
+</style>
